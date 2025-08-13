@@ -38,11 +38,22 @@ public class GamePanel extends JPanel implements ActionListener{
     }
 
     public void startGame() {
+        bodyParts = 6;
+        applesEaten = 0;
+        direction = 'R';
+        for (int i = 0; i < x.length; i++) {
+            x[i] = 0;
+            y[i] = 0;
+        }
+
         spawnApple();
         running  = true;
+
+        if (timer != null) timer.stop(); // stop old timer if exists
         timer = new Timer(DELAY, this);
         timer.start();
     }
+
     //Randomly place the apple
     public void spawnApple() {
         appleX = random.nextInt(SCREEN_WIDTH / UNIT_SIZE) * UNIT_SIZE;
@@ -152,7 +163,15 @@ public class GamePanel extends JPanel implements ActionListener{
         FontMetrics metrics2 = getFontMetrics(g.getFont());
         String scoreText = "Score: "+applesEaten;
         g.drawString(scoreText, (SCREEN_WIDTH - metrics1.stringWidth(scoreText)) / 2, SCREEN_HEIGHT /2 + 50);
+
+        //Replay
+        g.setColor(Color.white);
+        g.setFont(new Font("Ink Free", Font.BOLD, 25));
+        FontMetrics metrics3 = getFontMetrics(g.getFont());
+        String replayText = "Replay";
+        g.drawString(replayText, (SCREEN_WIDTH - metrics3.stringWidth(replayText)) / 2, SCREEN_HEIGHT /2 + 100);
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -190,6 +209,10 @@ public class GamePanel extends JPanel implements ActionListener{
                         direction = 'D';
                     }
                     break;
+                case KeyEvent.VK_ENTER:
+                    if (!running) {
+                        startGame();
+                    }
             }
         }
     }
